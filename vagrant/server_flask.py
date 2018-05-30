@@ -25,7 +25,7 @@ def restaurantMenu(restaurant_id):
     return output
 
 
-@app.route('/restaurant/new_item')
+@app.route('/restaurant/<int:restaurant_id>/item/new_item')
 def newMenuItem(restaurant_id):
     return "page to create a new menu item. Task 1 complete!"
 
