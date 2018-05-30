@@ -13,7 +13,7 @@ class CRUD_Operator():
     @classmethod
     def get_restaurant(cls, id):
         restaurant = session.query(Restaurant).filter_by(id=id).first()
-        return restaurant.name
+        return restaurant
 
     @classmethod
     def get_all_restaurants(cls):
