@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from _CRUD import CRUD_Operator
 
@@ -19,10 +19,9 @@ def mainPage():
 
 @app.route('/restaurant/<int:restaurant_id>')
 def restaurantMenu(restaurant_id):
-    restaurant = CRUD_Operator.get_restaurant(restaurant_id)
-    output = "<html><body>restaurant test: {}</body></html>".format(restaurant)
-
-    return output
+    restaurant = CRUD_Operator.get_restaurant(id=restaurant_id)
+    menu_items = CRUD_Operator.get_all_items(restaurant_id=restaurant_id)
+    return render_template("menu.html", restaurant=restaurant, menu_items=menu_items)
 
 
 @app.route('/restaurant/<int:restaurant_id>/item/new_item')
