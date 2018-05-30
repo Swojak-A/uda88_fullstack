@@ -30,12 +30,12 @@ def newMenuItem(restaurant_id):
 
 
 @app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/edit')
-def editMenuItem(restaurant_id, menu_id):
+def editMenuItem(restaurant_id, item_id):
     return "page to edit a menu item. Task 2 complete!"
 
 
 @app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/delete')
-def deleteMenuItem(restaurant_id, menu_id):
+def deleteMenuItem(restaurant_id, item_id):
     return "page to delete a menu item. Task 3 complete!"
 
 
