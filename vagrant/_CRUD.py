@@ -20,7 +20,10 @@ class CRUD_Operator():
         restaurants = [i.name for i in session.query(Restaurant).all()]
         return restaurants
 
-
+    @classmethod
+    def get_all_items(cls, restaurant_id):
+        menu_items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id).all()
+        return menu_items
 
 
 
