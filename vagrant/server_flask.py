@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 
-from _CRUD import CRUD_Operator
+from _CRUD import CRUD_Operator, get_all_rest
 
 
 app = Flask(__name__)
@@ -24,9 +25,22 @@ def restaurantMenu(restaurant_id):
     return render_template("menu.html", restaurant=restaurant, menu_items=menu_items)
 
 
-@app.route('/restaurant/<int:restaurant_id>/item/new_item')
+@app.route('/restaurant/<int:restaurant_id>/item/new_item', methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
-    return "page to create a new menu item. Task 1 complete!"
+    restaurant = CRUD_Operator.get_restaurant(id=restaurant_id)
+
+    if request.method == "POST":
+        CRUD_Operator.add_menu_item(name=request.form['name'],
+                                    description=request.form['name'],
+                                    price=request.form['name'],
+                                    course=request.form['name'],
+                                    restaurant_id=restaurant.id,
+                                    add=False)
+        return redirect(url_for('restaurantMenu', restaurant=restaurant))
+
+
+    else:
+        return render_template("newmenuitem.html", restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/edit')
