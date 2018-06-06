@@ -51,8 +51,8 @@ def newMenuItem(restaurant_id):
                                     course=request.form['course'],
                                     restaurant_id=restaurant.id)
         print(newItem.name, newItem.description,  newItem.course, newItem.price)
-        # db.session.add(newItem)
-        # db.session.commit()
+        db.session.add(newItem)
+        db.session.commit()
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant.id))
 
 
@@ -60,9 +60,25 @@ def newMenuItem(restaurant_id):
         return render_template("newmenuitem.html", restaurant=restaurant)
 
 
-@app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/edit')
+@app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, item_id):
-    return "page to edit a menu item. Task 2 complete!"
+    restaurant = Restaurant.query.filter_by(id=restaurant_id).one()
+    editedItem = MenuItem.query.filter_by(id=item_id).one()
+
+    if request.method == "POST":
+        editedItem.name = request.form['name'] if request.form['name'] != "" else editedItem.name
+        editedItem.description = request.form['description'] if request.form['description'] != "" else editedItem.description
+        editedItem.price = request.form['price'] if request.form['price'] != "" else editedItem.price
+        editedItem.course = request.form['course'] if request.form['course'] != "" else editedItem.course
+
+        print(editedItem.name, editedItem.description,  editedItem.course, editedItem.price)
+        db.session.add(editedItem)
+        db.session.commit()
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant.id))
+
+
+    else:
+        return render_template("editmenuitem.html", restaurant=restaurant, item=editedItem)
 
 
 @app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/delete')
