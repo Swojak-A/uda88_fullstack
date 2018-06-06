@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Deleting Menu Item: {{ item.name }}, {{ restaurant.name }}</title>
+</head>
+<body>
+
+	<h1>Deleting Menu Item: {{ item.name }} from {{ restaurant.name }}</h1>
+
+	<h2>Do you really want to delete this item?</h2>
+
+	<form action="{{url_for('deleteMenuItem', restaurant_id=restaurant.id, item_id=item.id )}}" method = 'POST'>
+
+		<p>Type "DELETE" to erase this item:</p>
+		<input type='text' size='30' name='confirmation' placeholder='DELETE'>
+		<br/>
+		<br/>
+
+		<input type='submit' value='Confirm'>
+		<a href="{{url_for('restaurantMenu', restaurant_id=restaurant.id)}}">Cancel</a>
+
+	</form>
+
+</body>
+</html>
