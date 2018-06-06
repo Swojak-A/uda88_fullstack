@@ -50,10 +50,10 @@ def newMenuItem(restaurant_id):
                                     price=request.form['price'],
                                     course=request.form['course'],
                                     restaurant_id=restaurant.id)
-        print(newItem.name, newItem.description, newItem.price)
+        print(newItem.name, newItem.description,  newItem.course, newItem.price)
         # db.session.add(newItem)
         # db.session.commit()
-        return redirect(url_for('restaurantMenu', restaurant=restaurant))
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant.id))
 
 
     else:
