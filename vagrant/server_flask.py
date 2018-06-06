@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurantmenu.db'
 db = SQLAlchemy(app)
 
+
+""" CLASSES """
 
 class Restaurant(db.Model):
     __tablename__ = 'restaurant'
@@ -23,6 +25,8 @@ class MenuItem(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     restaurant = db.relationship(Restaurant)
 
+
+""" METHODS """
 
 @app.route('/')
 def mainPage():
@@ -50,9 +54,10 @@ def newMenuItem(restaurant_id):
                                     price=request.form['price'],
                                     course=request.form['course'],
                                     restaurant_id=restaurant.id)
-        print(newItem.name, newItem.description,  newItem.course, newItem.price)
         db.session.add(newItem)
         db.session.commit()
+        flash("New menu item created!")
+        print("Item edited: {}, {}".format(newItem.name, newItem.description,  newItem.course, newItem.price))
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant.id))
 
 
@@ -71,9 +76,10 @@ def editMenuItem(restaurant_id, item_id):
         editedItem.price = request.form['price'] if request.form['price'] != "" else editedItem.price
         editedItem.course = request.form['course'] if request.form['course'] != "" else editedItem.course
 
-        print(editedItem.name, editedItem.description,  editedItem.course, editedItem.price)
         db.session.add(editedItem)
         db.session.commit()
+        flash("Menu item successfully edited!")
+        print("Item edited: {}, {}".format(editedItem.name, editedItem.description, editedItem.course, editedItem.price))
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant.id))
 
 
@@ -81,12 +87,25 @@ def editMenuItem(restaurant_id, item_id):
         return render_template("editmenuitem.html", restaurant=restaurant, item=editedItem)
 
 
-@app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/delete')
+@app.route('/restaurant/<int:restaurant_id>/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteMenuItem(restaurant_id, item_id):
-    return "page to delete a menu item. Task 3 complete!"
+    restaurant = Restaurant.query.filter_by(id=restaurant_id).one()
+    toBeDeletedItem = MenuItem.query.filter_by(id=item_id).one()
+
+    if request.method == "POST":
+        if request.form['confirmation'] == "DELETE":
+            db.session.delete(toBeDeletedItem)
+            db.session.commit()
+            flash("Menu item successfully erased!")
+            print("Item deleted: {}, {}".format(toBeDeletedItem.id, toBeDeletedItem.name))
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant.id))
+
+    else:
+        return render_template("deletemenuitem.html", restaurant=restaurant, item=toBeDeletedItem)
 
 
 
 
 if __name__ == '__main__':
+    app.secret_key = "ss_key"
     app.run(host='0.0.0.0', port = 5000, debug = True)
