@@ -32,9 +32,8 @@ class MenuItem(db.Model):
 def mainPage():
     restaurants = Restaurant.query.all()
     # print([i.name for i in restaurants])
-    output = "<html><body>test</body></html>"
 
-    return output
+    return render_template("index.html")
 
 
 @app.route('/restaurant/<int:restaurant_id>')
